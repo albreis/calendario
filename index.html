@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CALENDÁRIO DE EVENTOS</title>
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css" />
+  <link rel="stylesheet" href="./style.css">  
+  <script src="./vue.js"></script>
+</head>
+<body>
+  <div id="calendario" class="calendario">
+    <div class="seletor dias">
+      <div class="ant" @click="ant"><span class="fa fa-angle-left"></span></div>
+      <div class="dia" v-for="(dia, k) in dias_visiveis" @click="seleciona(dia)" :class="{central: k == centro}">
+        <span>{{dias[dia.getDay()].substr(0, 3)}}</span>
+        <strong>{{dia.getDate()}}</strong>
+        <div class="mes-ano" v-if="k == centro">
+          <small>{{meses[dia.getMonth()]}}</small>, <small>{{dia.getFullYear()}}</small>
+        </div>
+      </div>
+      <div class="pro" @click="pro"><span class="fa fa-angle-right"></span></div>
+    </div>
+    <div class="lista eventos">
+      <div class="sem-eventos" v-if="loading">
+        PROCURANDO EVENTOS...
+      </div>
+      <div class="sem-eventos" v-if="!eventos.length && !loading">
+        NÃO HÁ EVENTOS<br/>AGENDADOS PARA HOJE
+      </div>
+      <div class="evento" v-for="evento in eventos" v-if="!loading">
+        <div class="left">
+        <a :href="evento.link">
+          <img :src="evento.imagem" alt="evento.title" />
+        </a>
+        </div>
+        <div class="right">
+          <h3>
+            <a :href="evento.link">{{evento.title}}</a>
+          </h3>
+          <div class="infos">
+            <small class="local" v-if="evento.local"><strong>Local:</strong> {{evento.local}}</small><br/>
+            <small class="data_inicio" v-if="evento.data_inicio"><strong>Início:</strong> {{evento.data_inicio}}</small><br/>
+            <small class="data_fim" v-if="evento.data_fim"><strong>Término:</strong> {{evento.data_fim}}</small><br/><br/>
+          </div>
+          <div class="descricao">
+            <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. 
+            Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, 
+            when an unknown printer took a galley of type and scrambled it to make a type specimen book. 
+            It has survived not only five centuries, but also the leap into electronic typesetting, 
+            remaining essentially unchanged.</p>
+          </div>
+          <a :href="evento.link">ver evento</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    var app = new Vue({
+      el: '#calendario',
+      data() {
+        return {
+          // Sempre números ímpares, para ter um dia central
+          num_dias_visiveis: window.innerWidth > 800 ? 9 : 3,
+          loading: false,
+          // define qual o item central
+          centro: 4,
+          hoje: new Date,
+          dias_visiveis: {},
+          selecionado: false,
+          meses: [
+            'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 
+            'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'
+          ],
+          dias: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'],
+          eventos: []
+        }
+      },
+      created() {
+        this.seleciona(this.hoje)
+      }, 
+      methods: {
+        seleciona(dia) {
+          this.selecionado = dia
+        },
+        montaDias() {
+          this.centro = Math.floor(this.num_dias_visiveis / 2)
+          this.dias_visiveis = []
+          for(let i = ~this.centro; i < this.centro; i++) {
+            this.dias_visiveis.push(this.adicionaDias(this.selecionado, i+1))
+          }
+        },
+        ant() {
+          this.selecionado = this.adicionaDias(this.selecionado, -1)
+        },
+        pro() {
+          this.selecionado = this.adicionaDias(this.selecionado, 1)
+        },
+        adicionaDias(data, dias) {
+          var result = new Date(data);
+          result.setDate(result.getDate() + dias);
+          return result;
+        },
+        getEventos() {
+          // Realizar request para buscar eventos
+          this.eventos = []
+          if(self.fetch) {
+            this.loading = true
+            fetch('./eventos.json').then(res => {
+              res.json().then(data => {
+                this.eventos = data
+                this.loading = false
+              })
+            }).catch(err => {
+              console.log(err)
+            })
+          } else {            
+            for(let i = 7; i >= 1; i--) {
+              this.eventos.push({
+                title: 'Este é o título do Evento ' + i + ' que pode ser bem grande',
+                imagem: 'https://via.placeholder.com/350x250.png',
+                link: '#',
+                data_inicio: '2020-09-09',
+                data_fim: '2020-09-09',
+                local: 'Travessa Nildo Neponoceno Fernandes 317',
+                category: {
+                  name: 'Categoria',
+                  link: '#'
+                }
+              })
+            }
+          }
+        }
+      },
+      watch: {
+        selecionado() {
+          this.montaDias()
+          this.loading = true
+          this.getEventos()
+        }
+      }
+    });
+  </script>
+</body>
+</html>

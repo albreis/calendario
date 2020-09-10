@@ -1,0 +1,39 @@
+.calendario * {box-sizing:border-box;}
+.calendario {width: 100%;font-family: 'Open Sans', sans-serif;}
+.calendario .dias {display:flex;width:100%;justify-content:space-between;text-align:center;height:90px;align-items:center;border-bottom: 2px solid #f93491;}
+.calendario .dia {cursor:pointer;color:#999;position:relative;-webkit-touch-callout: none;-webkit-user-select: none;-khtml-user-select: none;-moz-user-select: none;-ms-user-select: none;user-select: none; }
+.calendario .dias > div {width:9.09%;}
+.calendario .dias .ant, .calendario .dias .pro {font-size: 40px;color:#f93491;cursor:pointer;}
+.calendario .dia.central {color:#444;font-weight:800;}
+.calendario .dia.central strong {background: #f93491;width: 42px;height:42px;border-radius:50px;color:#fff;font-weight:800;margin:auto;display:flex;justify-content:center;align-items:center;}
+.calendario .dia.central:after {content: "";width: 0;height: 0;border-left: 20px solid transparent;border-right: 20px solid transparent;position: absolute;bottom: -26px;border-top: 20px solid #f93491;left: 50%;transform: translate3d(-50%, 0, 0);}
+.calendario .dia span {display:block;text-transform:uppercase;font-size:14px;}
+.calendario .dia strong {display:block;font-size:20px;font-weight:800;}
+.calendario .mes-ano {white-space:nowrap;font-size:11px;}
+.calendario .mes-ano small {font-size:11px;}
+.calendario .sem-eventos {padding: 150px 15px;text-align:center;color:#f93491;text-transform:uppercase;font-size:20px;font-weight:500;}
+.calendario .eventos{min-height:400px;padding-bottom:30px;}
+.slider-eventos-home {padding:0!important}
+.calendario .eventos .evento {display:flex;padding: 25px 25px 0 25px;border-radius:4px;}
+.calendario .eventos .evento .left {position:relative;}
+.calendario .eventos .evento .left a {display:block;}
+.calendario .eventos .evento .left a img {float:left;width:100%;min-width:350px;}
+.calendario .eventos .evento .right {width:100%;padding:15px;background:#efefef;display:flex;flex-wrap:wrap;}
+.calendario .eventos .evento .right > h3 {width:100%;}
+.calendario .eventos .evento .right > a {color:#fff;background:#f93491;display:table;padding:5px 15px;border-radius:15px;}
+.calendario .eventos .evento .right .infos {width:25%;background:#efefef;}
+.calendario .eventos .evento .right .descricao {width:75%;background:#efefef;font-size:15px;padding-left: 15px;margin-top:3px;}
+.calendario .eventos .evento .right .descricao p {margin:0;}
+.calendario .eventos .evento h3 {font-size: 24px;font-weight:800;margin-top:0;margin-bottom:10px;}
+.calendario .eventos .evento h3 a {color:#222;}
+.calendario .eventos .evento a {text-decoration:none;}
+@media all and (max-width: 800px) {
+  .calendario .eventos .evento {flex-wrap:wrap;}
+  .calendario .eventos .evento .right .descricao{margin-bottom:15px;}
+  .calendario .eventos .evento .right .infos,
+  .calendario .eventos .evento .right .descricao,
+  .calendario .eventos .evento .left {width:100%;}
+  .calendario .eventos .evento .right > a {display:block;width:100%;text-align:center;}
+  .calendario .eventos .evento .right {width:100%;padding:15px;background:#efefef;}
+  .calendario .dias > div {width: 20%;}
+}
